@@ -1,7 +1,8 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Request, Body, Param } from '@nestjs/common';
 import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { CreateUserDto } from './users/dto/create-user.dto';
 
 @Controller()
 export class AppController {
@@ -17,6 +18,19 @@ export class AppController {
   @Get('protected')
   getHello(): string {
     return ;
+  }
+
+  @Post('register')
+  register(@Body() createUserDto: CreateUserDto) {
+    const user = this.authService.register(createUserDto);
+    if(user) {
+      return this.authService.sendConfirmationEmail(createUserDto);
+    }
+  }
+
+  @Get('confirmEmail/:uuid')
+  confirmEmail(@Param('uuid') uuid: string) {
+    return this.authService.confirmEmail(uuid);
   }
 }
  

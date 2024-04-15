@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { SalaryHead } from 'src/types';
 
 @Injectable()
 export class FormulaService {
