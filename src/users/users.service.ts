@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from 'src/types';
+import { BaseService } from 'src/base/base.service';
 
 @Injectable()
 export class UsersService {
@@ -27,6 +28,8 @@ export class UsersService {
         }
     ];
 
+    constructor(private readonly baseService: BaseService){}
+
     async findOne(username: string): Promise<User | undefined>{
         return this.users.find(user => user.username == username);
     }
@@ -38,7 +41,7 @@ export class UsersService {
             id: uuidv4(),
             name: name,
             username: username,
-            password: password, //TODO: Use Bcrypt to hash
+            password: await this.baseService.hashPassword(password),
             email: email,
             phoneNo: phoneNo,
             isValidated: false

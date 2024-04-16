@@ -11,7 +11,5 @@ async function bootstrap() {
 bootstrap();
 
 
-//TODO1: Use Bcrypt to encrypt password
 //TODO2: Update confirmation email template
-//TODO3: Update return data
 
