@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { SendEmailDto } from 'src/email/dto/send-email.dto';
 import { EmailService } from 'src/email/email.service';
@@ -12,7 +13,12 @@ export class AuthService {
 
     private uuids: string[] = [];
 
-    constructor(private userService: UsersService, private jwtService: JwtService, private emailService: EmailService){}
+    constructor(
+        private userService: UsersService, 
+        private jwtService: JwtService, 
+        private emailService: EmailService,
+        private configService: ConfigService
+    ){}
 
     async validateUser(username: string, password: string): Promise<any>{
         const user = await this.userService.findOne(username);
@@ -21,7 +27,6 @@ export class AuthService {
             const { password, username, ...rest } = user;
             return rest;
         }
-
         return null;
     }
 
@@ -37,14 +42,16 @@ export class AuthService {
         if (user){
             return user;
         }
-
         return null
     }
 
     async sendConfirmationEmail(createUserDto: CreateUserDto) {
         const uuid = uuidv4();
-        const link = `http://localhost:3000/confirmEmail/${uuid}`
+        const DOMAIN_NAME = this.configService.get('DOMAIN_NAME')
+        const link = `${DOMAIN_NAME}/confirmEmail/${uuid}`
+
         this.uuids.push(uuid);
+
         const sendEmailDto: SendEmailDto = {
             from: 'study.tienloc@gmail.com',
             to: createUserDto.email,
@@ -60,7 +67,7 @@ export class AuthService {
         if (found){
             return true;
         }
-        return false;
+        return false; //Link expired
     }
 
 

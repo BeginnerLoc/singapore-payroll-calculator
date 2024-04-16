@@ -9,3 +9,8 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+
+//TODO1: Use Bcrypt to encrypt password
+//TODO2: Update confirmation email template
+//TODO3: Update return data
