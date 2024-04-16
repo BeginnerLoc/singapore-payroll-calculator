@@ -37,18 +37,20 @@ export class AuthService {
         };
     }
 
-    async register(createUserDto: CreateUserDto): Promise<User | null> {
-        const user = this.userService.createUser(createUserDto);
-        if (user){
-            return user;
+    async register(createUserDto: CreateUserDto): Promise<any> {
+        const user = await this.userService.createUser(createUserDto);
+        const {username, password, ...rest} = user;
+
+        if (rest){
+            return rest;
         }
         return null
     }
 
-    async sendConfirmationEmail(createUserDto: CreateUserDto) {
+    async sendConfirmationEmail(createUserDto: CreateUserDto): Promise<boolean> {
         const uuid = uuidv4();
         const DOMAIN_NAME = this.configService.get('DOMAIN_NAME')
-        const link = `${DOMAIN_NAME}/confirmEmail/${uuid}`
+        const link = `${DOMAIN_NAME}/auth/confirmEmail/${uuid}`
 
         this.uuids.push(uuid);
 
@@ -59,7 +61,7 @@ export class AuthService {
             text: 'What is this for?',
             html: `<a href="${link}">Confirm Email</a>`
         }
-        this.emailService.sendEmail(sendEmailDto);
+        return this.emailService.sendEmail(sendEmailDto);
     }
 
     async confirmEmail(uuid: string) {

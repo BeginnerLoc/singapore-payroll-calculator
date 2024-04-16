@@ -9,10 +9,13 @@ export class EmailService {
     private readonly mailerService: MailerService,
   ) { }
 
-  sendEmail(sendEmailDto: SendEmailDto): void {
-    this.mailerService
-      .sendMail(sendEmailDto)
-      .then(() => { console.log("Sent!") })
-      .catch((e) => { console.log(e) });
+  async sendEmail(sendEmailDto: SendEmailDto): Promise<boolean> {
+    try {
+      await this.mailerService.sendMail(sendEmailDto);
+      return true;  
+    } catch (e) {
+      console.log(e);
+      return false;  
+    }
   }
 }
