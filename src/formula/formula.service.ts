@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { SalaryHead } from 'src/types';
 
 @Injectable()
 export class FormulaService {
@@ -7,7 +8,7 @@ export class FormulaService {
   private readonly totalPayrollFormula = "$1 + $2 * ($3 - $1)";
   private salaryHeads: SalaryHead[] = [
     { id: 1, formula: '($2+$3)/(10*10)'},
-    { id: 2, value: 100 },
+    { id: 2, value: 200 },
     { id: 3, formula: '$2-50' },
   ];
 
